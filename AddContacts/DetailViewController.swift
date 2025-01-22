@@ -14,15 +14,45 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var phoneNumberLabel: UILabel!
+    
+    
+    @IBOutlet weak var nameTextFieldChange: UITextField!
+    
+    @IBOutlet weak var phoneTextFieldChange: UITextField!
+    
+    var contact: Contacts?
+       var onSave: ((Contacts) -> Void)?
+       
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         nameLabel.text = name
         phoneNumberLabel.text = phoneNumber
         // Do any additional setup after loading the view.
+        
+        nameTextFieldChange.text = contact?.name
+        phoneTextFieldChange.text = contact?.phoneNumber
     }
     
 
+    @IBAction func changeButton(_ sender: Any) {
+        
+        guard let name = nameTextFieldChange.text, !name.isEmpty,
+              let phone = phoneTextFieldChange.text, !phone.isEmpty else {
+                    
+                    return
+                }
+        
+        contact?.name = name
+        contact?.phoneNumber = phone
+               
+               if let updatedContact = contact {
+                   onSave?(updatedContact)
+               }
+               
+               navigationController?.popViewController(animated: true) // Вернуться назад
+           }
     /*
     // MARK: - Navigation
 

@@ -112,15 +112,23 @@ class TableViewController: UITableViewController {
         
         contacts[indexPath.row].isSelected.toggle()
         
-        let details = storyboard?.instantiateViewController(identifier: "details") as! DetailViewController
-        details.name = contacts[indexPath.row].name
-        details.phoneNumber = contacts[indexPath.row].phoneNumber
-        navigationController?.show(details, sender: self)
-        
-        
-        
-        tableView.reloadData()
-        saveContacts()
+        let selectedContact = contacts[indexPath.row]
+           
+        if let details = storyboard?.instantiateViewController(withIdentifier: "details") as? DetailViewController {
+            details.contact = selectedContact
+               
+            details.onSave = { [weak self] updatedContact in
+                self?.contacts[indexPath.row] = updatedContact
+                   self?.saveContacts()
+                   self?.tableView.reloadData()
+               }
+            details.name = contacts[indexPath.row].name
+            details.phoneNumber = contacts[indexPath.row].phoneNumber
+            navigationController?.show(details, sender: self)
+               
+            tableView.reloadData()
+            saveContacts()
+           }
         
         
     }
